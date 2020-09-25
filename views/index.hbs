@@ -1,10 +1,10 @@
-{{!-- <div class="container mt-5">
+
+{{!-- d-flex justify-content-center align-items-center flex-column py-5 --}}
+<div class="container mt-5">
     <div class="row">
-
-        <div class="col-md-3">
-
-            {{#each products}}
-
+         {{#each products}}
+        <div class=" col-md-3 ">
+           
             <div class="card" style="width: 18rem;">
                 <img src="{{this.img}}" class="card-img-top" alt="...">
                 <div class="card-body">
@@ -13,19 +13,8 @@
                     <a href="#" class="btn btn-primary">Add to cart</a>
                 </div>
             </div>
-            {{/each}}
         </div>
-    </div>
+        {{/each}}
 
-</div> --}}
-
- {{#each products}}
-<div class="card" style="width: 18rem;">
-    <img src="{{this.img}}" class="card-img-top" alt="...">
-    <div class="card-body">
-        <h5 class="card-title">{{this.name}}</h5>
-        <p class="card-text">{{this.decription}}</p>
-        <a href="#" class="btn btn-primary">Add to cart</a>
     </div>
 </div>
-{{/each}}

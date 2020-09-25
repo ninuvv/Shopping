@@ -21,13 +21,13 @@ router.get('/', function(req, res, next) {
       name:"Samsung",
       category:"Mobile",
       decription:"lens improved",
-      img:"https://picsum.photos/500/500"
+      img:"https://images-na.ssl-images-amazon.com/images/I/71wPwmxo2NL._SL1500_.jpg"
     },
     {
       name:"OPPO",
       category:"Mobile",
       decription:"4GB memory",
-      img:"https://picsum.photos/500/500",
+      img:"https://www.91-img.com/pictures/133188-v4-oppo-f11-mobile-phone-large-1.jpg?tr=q-60",
     }
   ]
     res.render('index', {products ,admin:false});
