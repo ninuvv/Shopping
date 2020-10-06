@@ -11,17 +11,17 @@ router.get('/', function (req, res, next) {
 
 });
 router.get("/add_product", function (req, res) {
-  res.render('admin/add_product')
+  res.render('admin/add_product',{admin:true})
 })
 
 router.post("/add_product", function (req, res) {
-  console.log(req.body);
-  console.log(req.files.Image)
-
+  // console.log(req.body);
+  // console.log(req.files.Image)
+ 
   productHelper.addProducts(req.body, (result) => {
     let image = req.files.Image
     image.mv('./public/product_images/' + result + '.jpg', (err, done) => {
-      if (!err) res.render('admin/add_product')
+      if (!err) res.render('admin/add_product',{admin:true})
       else console.log(err)
     })
 
