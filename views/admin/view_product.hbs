@@ -22,8 +22,8 @@
                     <td>{{this.desc}}</td>
                     <td><img style="width:50px;height:50px" src="/product_images/{{this._id}}.jpg" alt=""></td>
                     <td>
-                        <a href="admin/edit_products" class="btn btn-danger">Edit</a>
-                         <a href="admin/del_products/{{this._id}}" class="btn btn-primary"
+                        <a href="admin/edit_products/{{this._id}}" class="btn btn-primary">Edit</a>
+                         <a href="admin/del_products/{{this._id}}" class="btn btn-danger"
                             onclick=" return confirm('Are you want to delete {{this.name}} {{this._id}}')">Delete</a>
                         {{!-- <a href="admin/del_products ?id={{this._id}}&name=ninu" class="btn btn-primary">Delete</a> --}}
                     </td>
