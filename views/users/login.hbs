@@ -1,8 +1,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 py-5">
-
-            <form  action="/login" method="post" >
+            {{#if loginErr}}
+            <p class="error">{{loginErr}} </p>
+            {{/if}}
+            <form action="/login" method="post">
                 <div class="form-group">
                     <label for="exampleInputUser">User name</label>
                     <input type="text" class="form-control" name="username" id="exampleInputUser"

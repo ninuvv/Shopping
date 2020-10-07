@@ -1,8 +1,8 @@
 <section>
     <div class="container">
-<div class="row mt-5">
-    <a href="/admin/add_product" class="btn btn-success ml-auto"> Add product</a>
-</div>
+        <div class="row mt-5">
+            <a href="/admin/add_product" class="btn btn-success ml-auto"> Add product</a>
+        </div>
         <table class="table mt-5">
             <thead>
                 <tr>
@@ -21,10 +21,16 @@
                     <td>{{this.cate}}</td>
                     <td>{{this.desc}}</td>
                     <td><img style="width:50px;height:50px" src="/product_images/{{this._id}}.jpg" alt=""></td>
+                    <td>
+                        <a href="admin/edit_products" class="btn btn-danger">Edit</a>
+                         <a href="admin/del_products/{{this._id}}" class="btn btn-primary"
+                            onclick=" return confirm('Are you want to delete {{this.name}} {{this._id}}')">Delete</a>
+                        {{!-- <a href="admin/del_products ?id={{this._id}}&name=ninu" class="btn btn-primary">Delete</a> --}}
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
     </div>
-
+                       
 </section>

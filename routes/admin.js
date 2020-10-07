@@ -11,17 +11,32 @@ router.get('/', function (req, res, next) {
 
 });
 router.get("/add_product", function (req, res) {
-  res.render('admin/add_product',{admin:true})
+  res.render('admin/add_product', { admin: true })
 })
 
+// router.get("edit_products", function (req, res) {
+//   res.render('admin/edit_products',{admin:true})
+// })
+
+router.get("/del_products/:Prodid", function (req, res) {
+  let ProdId = req.params.Prodid
+   console.log(ProdId)
+   productHelper.deleteProduct(ProdId).then((data) => {
+    console.log(data)
+    res.redirect("/admin")
+  })
+})
+
+// router.get("/del_products", function (req, res) {
+//   console.log(req.query.id)
+//   console.log(req.query.name)
+// })
+
 router.post("/add_product", function (req, res) {
-  // console.log(req.body);
-  // console.log(req.files.Image)
- 
   productHelper.addProducts(req.body, (result) => {
     let image = req.files.Image
     image.mv('./public/product_images/' + result + '.jpg', (err, done) => {
-      if (!err) res.render('admin/add_product',{admin:true})
+      if (!err) res.render('admin/add_product', { admin: true })
       else console.log(err)
     })
 
