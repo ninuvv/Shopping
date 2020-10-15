@@ -44,20 +44,39 @@ module.exports = {
     addToCart: (Prod_id, User_id) => {
 
         return new Promise(async (resolve, reject) => {
+            let ProObj = {
+                item: ObjId(Prod_id),
+                quantity: 1
+            }
             let usercart = await db.get().collection(collection.CART_COLLECTION).findOne({ userId: ObjId(User_id) })
+            console.log(usercart)
 
             if (usercart) {
-                db.get().collection(collections.CART_COLLECTION).updateOne(
-                    { userId: ObjId(User_id) }, {
-                    $push: { productsId: ObjId(Prod_id) }
-                }).then((response) => {
-                    resolve()
-                })
 
+                let proExists = usercart.products.findIndex(product => product.item == Prod_id)
+
+                if (proExists != -1) {
+                    db.get().collection(collections.CART_COLLECTION).
+                        updateOne(
+                            { 'products.item': ObjId(Prod_id) },
+                            { $inc: { 'products.$.quantity': 1 } }
+                        ).then(()=>{
+                            resolve()
+                        })
+                } 
+                else {
+                    db.get().collection(collections.CART_COLLECTION)
+                        .updateOne(
+                            { userId: ObjId(User_id) },
+                            { $push: { products: ProObj } }
+                        ).then((response) => {
+                            resolve()
+                        })
+                }
             } else {
                 let cartObj = {
                     userId: ObjId(User_id),
-                    productsId: [ObjId(Prod_id)]
+                    products: [ProObj]
                 }
                 db.get().collection(collections.CART_COLLECTION).insertOne(cartObj).then((response) => {
                     resolve()
@@ -69,22 +88,44 @@ module.exports = {
     getCartDetails: (User_id) => {
         return new Promise(async (resolve, reject) => {
             let cartItems = await db.get().collection(collections.CART_COLLECTION).aggregate([
-                {
-                    $match: { userId: ObjId(User_id) }
+                {$match: { userId: ObjId(User_id) }},
+                { $unwind :'$products' },
+                {$project:{
+                        item:'$products.item',
+                        quantity:'$products.quantity'}
                 },
-                {
-                    $lookup: {
-                        from: collections.PRODUCT_COLLECTIONS,
-                        let: { prodLists:'$productsId'},
-                        pipeline: [{
-                            $match: { $expr: { $in: ['$_id', "$$prodLists"] } }
-                        }],
-                        as: 'cartItems'
+                {$lookup:{
+                        from:collections.PRODUCT_COLLECTIONS,
+                        localField:'item',
+                        foreignField:'_id',
+                        as : 'product'
+
                     }
                 }
+                // {
+                //     $lookup: {
+                //         from: collections.PRODUCT_COLLECTIONS,
+                //         let: { prodLists: '$productsId' },
+                //         pipeline: [{
+                //             $match: { $expr: { $in: ['$_id', "$$prodLists"] } }
+                //         }],
+                //         as: 'cartItems'
+                //     }
+                // }
             ]).toArray()
-            // resolve(cartItems)
-            resolve(cartItems[0].cartItems)
+            // console.log(cartItems) 
+            console.log(cartItems[0].product)
+            resolve(cartItems)
+        })
+    },
+    getCardCount: (User_id) => {
+        return new Promise(async (resolve, reject) => {
+            let count = 0;
+            let cart = await db.get().collection(collections.CART_COLLECTION).findOne({ userId: ObjId(User_id) })
+            if (cart) {
+                count = cart.products.length
+            }
+            resolve(count)
         })
     }
 }
