@@ -83,4 +83,13 @@ router.get('/add_to_cart/:id',  (req, res) => {
   })
 })
 
+router.post('/change_product_quantity',(req,res)=>{  
+  console.log("API Call qqqq")
+  userHelper.changeQuantity(req.body).then((response)=>{
+    console.log("API Call q")
+      res.json(response)
+  })
+
+})
+
 module.exports = router;

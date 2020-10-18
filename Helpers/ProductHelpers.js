@@ -38,6 +38,7 @@ module.exports = {
                 $set:{
                     name:proDetails.name,
                     cate:proDetails.cate,
+                    price:proDetails.price,
                     desc:proDetails.desc
                 }                              
             }) .then((resp)=>{
