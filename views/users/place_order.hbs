@@ -1,0 +1,61 @@
+<section>
+    <div class="container">
+        <form action="/place_order" method="post" id="checkout_form">
+            <div class="row mt-3">
+
+                <div class="col-md-6">
+                    <h4>Enter Delivery Details</h4>
+                    <div>
+                        <label for="">Address</label>
+                        <textarea class="form-control" name="address" id="" cols="10" rows="3"></textarea>
+
+                        <label for="">Pincode:</label>
+                        <input type="text" class="form-control" name="pincode">
+                        <label for="">mob:</label>
+                        <input type="text" class="form-control" name="mob">
+                        
+                       
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="container mt-5 ml-5 checkout">
+                         <input type="text" name="userId" value='{{this.user._id}}' >
+
+                        <h5>Total :Rs.{{Total}}</h5>
+                        <div class="payament">
+                            <p>Payment Method</p>
+                            <input type="radio" name="payment-method" value="COD" checked="checked">
+                            <label>Cash On Delivery</label>
+                            <br>
+                            <input type="radio" name="payment-method" value="ONLINE">
+                            <label>Payment mode</label>
+<br>
+                            <button class="btn btn-primary" type="submit">CheckOut</button>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+        </form>
+    </div>
+    </div>
+</section>
+
+<script>
+    $("#checkout_form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place_order',
+            method: 'post',
+            data: $('#checkout_form').serialize(),
+            success:(response)=>{
+            alert(response)
+            if (response.status){
+                location.href=""
+            }
+        }
+        })
+    })
+</script>

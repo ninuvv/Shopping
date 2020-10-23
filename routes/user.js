@@ -13,13 +13,13 @@ const verifyLogin = (req, res, next) => {
 router.get('/', async function (req, res, next) {
   let user = req.session.user
 
-  let cartCount=null
-  if(user){
-    cartCount=await userHelper.getCardCount(user._id) 
+  let cartCount = null
+  if (user) {
+    cartCount = await userHelper.getCardCount(user._id)
   }
-  
+
   productHelper.getallProducts().then((products) => {
-    res.render('users/view_products', { products, admin: false, user,cartCount });
+    res.render('users/view_products', { products, admin: false, user, cartCount });
     // res.render('users/view_products', { products, user });
   })
 
@@ -69,27 +69,40 @@ router.get('/logout', (req, res) => {
 
 router.get('/cart', verifyLogin, async (req, res) => {
   let Products = await userHelper.getCartDetails(req.session.user._id)
-  res.render('users/cart',{Products,user:req.session.user});
+  let totalAmt = await userHelper.getTotalAmount(req.session.user._id)
+  res.render('users/cart', { Products, user: req.session.user, totalAmt });
 
 
 })
 
 
-router.get('/add_to_cart/:id',  (req, res) => {
+router.get('/add_to_cart/:id', (req, res) => {
   console.log("API Call")
   userHelper.addToCart(req.params.id, req.session.user._id).then(() => {
-    res.json({status:true})
+    res.json({ status: true })
     // res.redirect('/')
   })
 })
 
-router.post('/change_product_quantity',(req,res)=>{  
-  console.log("API Call qqqq")
-  userHelper.changeQuantity(req.body).then((response)=>{
-    console.log("API Call q")
-      res.json(response)
+router.post('/change_product_quantity', (req, res) => {
+  userHelper.changeQuantity(req.body).then(async (response) => {
+    let totalAmt = await userHelper.getTotalAmount(req.body.userId)
+    response.total = totalAmt
+    res.json(response)
   })
 
 })
 
+router.get('/place_order', verifyLogin, async (req, res) => {
+  let Total = await userHelper.getTotalAmount(req.session.user._id)
+  res.render('users/place_order', { Total, user :req.session.user })
+})
+
+router.post('/place_order', verifyLogin, async(req, res) => {
+  let products = await userHelper.getcartProductDetails(req.body.userId)
+  let Total = await userHelper.getTotalAmount(req.body.userId)
+  userHelper.placeOrder(req.body, products, Total).then((response) => {
+res.json({status:true})
+  })
+})
 module.exports = router;

@@ -20,10 +20,10 @@
                     <td>
 
                         <button class="cart-item-count mr-3"
-                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)">-</button>
                         <span id='{{this.product._id}}'>{{this.quantity}}</span>
                         <button "cart-item-count ml-3"
-                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)">+</button>
 
 
                     </td>
@@ -32,12 +32,18 @@
                 {{/each}}
             </tbody>
         </table>
+        <hr> 
+        <div class="float-right pr-5">
+            <h4 class="float-left mr-5 ">Total :Rs.<span id="total">{{totalAmt}}</span> <h4>
+            <a href="/place_order" class="btn btn-success mt-5" style="width=100%"><b>Place Order </b> </a>
+        </div>
+
     </div>
 </section>
 
 <script>
 
-    function changeQuantity(cartId, prodId, count) {
+    function changeQuantity(cartId, prodId,userId, count) {
         let quantity = parseInt(document.getElementById(prodId).innerHTML)
 
         count = parseInt(count)
@@ -45,17 +51,21 @@
             url: '/change_product_quantity',
             method: 'post',
             data: {
+                userId:userId,
                 cart: cartId,
                 product: prodId,
                 count: count,
                 quantity: quantity
             },
             success: (response) => {
+                    
                 if (response.removeProduct) {
                     alert("Product removed from cart")
                     location.reload()
                 } else {
+                    //console.log(response)
                     document.getElementById(prodId).innerHTML = quantity + count
+                    document.getElementById('total').innerHTML=response.total
                 }
 
             }

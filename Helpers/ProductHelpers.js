@@ -6,6 +6,7 @@ var ObjId=require("mongodb").ObjectID
 
 module.exports = {
     addProducts: (product, callback) => {
+        product.price=parseInt(product.price)
         db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(product).then((data) => {
             // console.log(data)
             callback(data.ops[0]._id)
@@ -38,7 +39,7 @@ module.exports = {
                 $set:{
                     name:proDetails.name,
                     cate:proDetails.cate,
-                    price:proDetails.price,
+                    price:parseInt(proDetails.price),
                     desc:proDetails.desc
                 }                              
             }) .then((resp)=>{
