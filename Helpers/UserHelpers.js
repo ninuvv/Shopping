@@ -196,9 +196,9 @@ module.exports = {
     },
     placeOrder: (order, product, total) => {
         return new Promise((resolve, reject) => {
-            let status = order['payment-method']=== 'COD' ? 'placed' : 'pending'
+            let status = order['payment-method'] === 'COD' ? 'placed' : 'pending'
             let orderObj = {
-                deleiverydetails: {
+                deliverydetails: {
                     address: order.address,
                     pincode: order.pincode,
                     mob: order.mob
@@ -210,18 +210,59 @@ module.exports = {
                 status: status,
                 date: new Date()
             }
-            db.get().collection(collections.ORDER_COLLECTION).insertOne({ orderObj }).then((response) => {
-                db.get().collection(collections.CART_COLLECTION).removeOne({ userId: ObjId(order.userId)})
+            db.get().collection(collections.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
+                db.get().collection(collections.CART_COLLECTION).removeOne({ userId: ObjId(order.userId) })
                 resolve()
             })
         })
 
     },
+
     getcartProductDetails: (userId) => {
         return new Promise(async (resolve, reject) => {
-             let cart = await db.get().collection(collections.CART_COLLECTION).findOne({userId:ObjId(userId)})
-             console.log('cart'+cart.products)
+            let cart = ""
+            cart = await db.get().collection(collections.CART_COLLECTION).findOne({ userId: ObjId(userId) })
+
+            console.log('cart' + cart.products)
             resolve(cart.products)
+
+
+        })
+    },
+    getOrder: (userId) => {
+        return new Promise(async (resolve, reject) => {            
+            let order = await db.get().collection(collections.ORDER_COLLECTION).find({userId: ObjId(userId)}).toArray()
+            // console.log(order)
+            resolve(order)
+        })
+    },
+    getOrderProduct: (orderId) => {
+        return new Promise(async (resolve, reject) => {
+            let cartOrders = await db.get().collection(collections.ORDER_COLLECTION).aggregate([
+                { $match: { _id: ObjId(orderId) } },
+                { $unwind: '$products' },
+                {
+                    $project: {
+                        item: '$products.item',
+                        quantity: '$products.quantity'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collections.PRODUCT_COLLECTIONS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+
+                    }
+                },
+                {
+                    $project: { item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] } }
+                }
+
+            ]).toArray()
+              console.log(cartOrders)
+            resolve(cartOrders)
         })
     }
 }

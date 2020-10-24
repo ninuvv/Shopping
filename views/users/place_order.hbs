@@ -13,13 +13,13 @@
                         <input type="text" class="form-control" name="pincode">
                         <label for="">mob:</label>
                         <input type="text" class="form-control" name="mob">
-                        
-                       
+
+
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="container mt-5 ml-5 checkout">
-                         <input type="text" name="userId" value='{{this.user._id}}' >
+                        <input type="text" name="userId" value='{{user._id}}'  >
 
                         <h5>Total :Rs.{{Total}}</h5>
                         <div class="payament">
@@ -29,7 +29,7 @@
                             <br>
                             <input type="radio" name="payment-method" value="ONLINE">
                             <label>Payment mode</label>
-<br>
+                            <br>
                             <button class="btn btn-primary" type="submit">CheckOut</button>
                         </div>
 
@@ -50,12 +50,12 @@
             url: '/place_order',
             method: 'post',
             data: $('#checkout_form').serialize(),
-            success:(response)=>{
-            alert(response)
-            if (response.status){
-                location.href=""
+            success: (response) => {
+                alert(response)
+                if (response.status) {
+                    location.href = "/order_success"
+                }
             }
-        }
         })
     })
 </script>

@@ -1,0 +1,21 @@
+
+{{!-- d-flex justify-content-center align-items-center flex-column py-5 --}}
+<div class="container mt-5">
+    <div class="row">
+         {{#each products}}
+        <div class=" col-md-3 ">
+           
+            <div class="card" style="width: 15rem;">
+                <img src="/product_images/{{this.product._id}}.jpg" style="width:200px ;height:250px" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.product.name}}</h5>
+                    <p class="card-text">Rs.{{this.product.price}}</p>
+                    <p class="card-text">Quantity:{{this.quantity}}</p>
+                    <p class="card-text">{{this.desc}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+
+    </div>
+</div>
