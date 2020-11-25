@@ -20,6 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 
+
 //set templete engine
 app.engine('hbs', exphbs({
   defaultLayout: 'layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/Partial/',
@@ -33,8 +34,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(__dirname + '/public'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileupload());
+
 app.use(session({secret:"key",cookie:{maxAge:600000}}))
 //database connection
 

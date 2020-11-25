@@ -161,7 +161,7 @@ module.exports = {
     },
     getTotalAmount: (User_id) => {
         return new Promise(async (resolve, reject) => {
-            let total = await db.get().collection(collections.CART_COLLECTION).aggregate([
+          let  total = await db.get().collection(collections.CART_COLLECTION).aggregate([
                 { $match: { userId: ObjId(User_id) } },
                 { $unwind: '$products' },
                 {

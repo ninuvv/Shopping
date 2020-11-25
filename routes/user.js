@@ -6,7 +6,7 @@ var userHelper = require("../Helpers/UserHelpers")
 var ObjId = require("mongodb").ObjectID
 
 const verifyLogin = (req, res, next) => {
-  if (req.session.loggedin) { next() }
+  if (req.session.user.loggedin) { next() }
   else { res.redirect("/login") }
 }
 /* GET home page. */
@@ -25,36 +25,38 @@ router.get('/', async function (req, res, next) {
 
 });
 
-router.get('/login', function (req, res) {
-  if (req.session.loggedin) {
-    res.redirect("/");
-  } else {
 
-    res.render('users/login', { "loginErr": req.session.loginErr });
-    req.session.loginErr = false;
-  }
-
-})
 router.get('/signup', function (req, res) {
   res.render('users/signup');
 })
 router.post('/signup', (req, res) => {
   userHelper.doSignUp(req.body).then((response) => {
     console.log(response)
-    req.session.loggedin = true;
     req.session.user = response;
+    req.session.user.loggedin = true;
     res.redirect('/')
   })
 })
+
+router.get('/login', function (req, res) {
+  if (req.session.user) {
+    res.redirect("/");
+  } else {
+    res.render('users/login');
+    res.render('users/login', { "loginErr": req.session.userLoginErr });
+    req.session.userLoginErr = false;
+  }
+
+})
 router.post('/login', (req, res) => {
   userHelper.doLogin(req.body).then((response) => {
-    // console.log(response)
-    if (response.status) {
-      req.session.loggedin = true;
+   if (response.status) {
       req.session.user = response.user;
+      req.session.user.loggedin = true;
+    
       res.redirect('/')
     } else {
-      req.session.loginErr = "Invalid user name and password";
+      req.session.userLoginErr = "Invalid user name and password";
       res.redirect('/login');
 
     }
@@ -63,13 +65,16 @@ router.post('/login', (req, res) => {
 
 
 router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login')
+  // req.session.destroy();
+   req.session.user.loggedin=false
+  req.session.user=null
+ 
+  res.redirect('/')
 })
 
 router.get('/cart', verifyLogin, async (req, res) => {
   let Products = await userHelper.getCartDetails(req.session.user._id)
-  let totalAmt = await userHelper.getTotalAmount(req.session.user._id)
+     let totalAmt = await userHelper.getTotalAmount(req.session.user._id) 
   res.render('users/cart', { Products, user: req.session.user, totalAmt });
 
 

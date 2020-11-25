@@ -1,10 +1,10 @@
 <section>
     <div class="container">
-        <div class="row mt-5">
+        <div class="row mt-5 " style="margin-bottom: 10px;">
             <a href="/admin/add_product" class="btn btn-success ml-auto"> Add product</a>
         </div>
-        <table class="table mt-5">
-            <thead>
+        <table class="table mt-5" id="myTable">
+            <thead> 
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
@@ -12,6 +12,7 @@
                     <th scope="col">Price</th>
                     <th scope="col">Decscription</th>
                     <th scope="col">Image</th>
+                     <th scope="col">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,3 +37,9 @@
     </div>
                        
 </section>
+
+<script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
